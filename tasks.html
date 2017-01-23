@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Task list</title>
+
+
+
+ <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="styles/tasks.css" media="screen" />
+
+    <script src="scripts/jquery-3.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.js"></script>
+    <!-- Load JsRender latest version, from www.jsviews.com: -->
+  <script src="http://www.jsviews.com/download/jsrender.js"></script>
+  <script src="scripts/date.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+  <script src="scripts/jquery-serialization.js"></script>
+  <!--  <script src="scripts/tasks-webstorage.js"></script>
+  <script src="scripts/tasks-indexeddb.js"></script> -->
+  <script src="scripts/tasks-controller.js"></script>
+
+
+</head>
+<body>
+	<header>
+		<span>Task list</span>
+	</header>
+	<main id="taskPage">
+		<section id="taskCreation" class="not">
+			<form id="taskForm">
+        <input type="hidden" name="id" />
+				<div>
+					<label>Task</label> <input type="text" required="required"
+						maxlength="200" name="task" class="large" placeholder="Breakfast at Tiffanys" />
+				</div>
+				<div>
+					<label>Required by</label> <input type="date" required="required"
+						name="requiredBy" />
+				</div>
+				<div>
+					<label>Category</label> <select name="category">
+						<option value="Personal">Personal</option>
+						<option value="Work">Work</option>
+					</select>
+				</div>
+				<nav>
+					<a href="#" id="saveTask" class="btn btn-info btn-sm">Save task</a>
+          <a href="#" id="clearTask" class="btn btn-warning btn-sm">Clear task</a>
+				</nav>
+			</form>
+		</section>
+		<section>
+			<table id="tblTasks" class="table table-striped">
+        <colgroup>
+  				<col width="40%">
+  				<col width="15%">
+  				<col width="15%">
+  				<col width="30%">
+  			</colgroup>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Due</th>
+						<th>Category</th>
+            <th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+
+
+				</tbody>
+			</table>
+			<nav>
+				<a href="#" id="btnAddTask" class="btn btn-primary btn-sm">Add task</a>
+			</nav>
+		</section>
+    <section id="csvImport">
+      <div>
+        <label for="task">Import tasks from a CSV file:</label>
+        <input type="file" id="importFile" name="importFile" />
+      </div>
+    </section>
+	</main>
+	<footer>You have <span id="taskCount"></span> tasks</footer>
+
+
+<script>
+/*  $(document).ready(function() {
+       tasksController.init($('#taskPage'), function() {
+        tasksController.loadTasks();
+       });
+    }); */
+function initScreen () {
+  $(document).ready(function() {
+         tasksController.init($('#taskPage'), function() {
+          tasksController.loadTasks();
+         });
+      });
+}
+if (window.indexedDB) {
+  $.getScript("scripts/tasks-indexeddb.js")
+  .done(function(script, textStatus) {
+    initScreen();
+  })
+  .fail(function(jqhxr, settings, exception) {
+    console.log('Failed to load indexedDB script');
+  });
+} else if (window.localStorage) {
+  $.getScript("scripts/tasks-webstorage.js")
+  .done(function(script, textStatus) {
+    initScreen();
+  })
+  .fail(function(jqhxr, settings, exception) {
+    console.log('Failed to load web storage script');
+  });
+}
+
+</script>
+
+<script id="taskRow" type="text/x-jsrender">
+    <tr>
+    	<td {{if complete == true}}class="taskCompleted"{{/if}}>{{:task}}</td>
+    	<td {{if complete == true}}class="taskCompleted"{{/if}}><time datetime={{:requiredBy}}> {{:requiredBy}}</time></td>
+    	<td {{if complete == true}}class="taskCompleted"{{/if}}>{{:category}}</td>
+    	<td>
+    		<nav>
+          {{if complete != true}}
+    			<a href="#" class="editRow" data-task-id="{{:id}}">Edit</a>
+    			<a href="#" class="completeRow" data-task-id="{{:id}}">Complete</a>
+          {{/if}}
+    			<a href="#" class="deleteRow" data-task-id="{{:id}}">Delete</a>
+    		</nav>
+    	</td>
+    </tr>
+</script>
+
+</body>
+</html>

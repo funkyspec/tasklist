@@ -1,0 +1,5 @@
+# tasklist
+
+This application is the result of my effort in following along the book "A Software Engineer Learns HTML5, JavaScript, & jQuery" by Dane Cameron. Most (but not all!) the code is Mr. Cameron's and can be found in his book.  This application has not been deployed to a public webserver. You can download the files and run the application locally if you wish. You need a web server like Apache running on your computer and the application's main page (tasks.html) and files must be accessed via a web browser requesting through localhost. (The application will not work if you attempt to access it via a browser through your local file system - you must have a web server running and you must access it through the web server.)  When I developed and tested this application, I used a Windows 7 laptop running XAMPP. Source files were placed in a directory in XAMPP's htdocs directory.
+
+The biggest difference between my code and Mr. Cameron's is the plugin used for generating HTML from a template. Mr. Cameron used jQuery Template, which is not being actively developed anymore. I used the similar, but newer, plugin JSRender, available at http://www.jsviews.com.
